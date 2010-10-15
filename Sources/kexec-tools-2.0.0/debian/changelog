@@ -1,0 +1,151 @@
+kexec-tools (1:2.0.0-2) unstable; urgency=low
+
+  * Fixed configure script failure (closes: Bug#543081)
+  * Added debian/README.source
+
+ -- Khalid Aziz <khalid@debian.org>  Thu, 10 Sep 2009 09:34:58 -0600
+
+kexec-tools (1:2.0.0-1) unstable; urgency=low
+
+  * New upstream version 
+  * Added note about call to shutdown by kexec -e. Also added a README.debian
+    to explain automatic enablement of kexec (closes: Bug#501847)
+  * Added japanese translation (closes: Bug#512870)
+  * Added swedish translation (closes: Bug#503604)
+
+ -- Khalid Aziz <khalid@debian.org>  Wed, 15 Apr 2009 16:41:45 -0600
+
+kexec-tools (20080324-2.1) unstable; urgency=low
+
+  * Porter NMU.
+  * New dpatch, arm_build, fixes build on armel; thanks Cyril Hrubis;
+    closes: #489175.
+  * List arm and armel in control.
+
+ -- Loic Minier <lool@dooz.org>  Sat, 31 Jan 2009 18:31:42 +0000
+
+kexec-tools (20080324-2) unstable; urgency=low
+
+  * Updated init script to check for new boolean value of LOAD_KEXEC (closes:
+    Bug#479961)
+  * Added french translation for debconf (closes: Bug#470921,Bug#479688)
+  * Added czech translation for debconf (closes: Bug#480301)
+
+ -- Khalid Aziz <khalid@debian.org>  Fri, 09 May 2008 12:03:29 -0600
+
+kexec-tools (20080324-1) unstable; urgency=low
+
+  * New upstream version
+  * Fixed a typo in x86-64 makefile that causes kexec load to fail on
+    amd64 (closes: Bug#473547)
+  * Added a patch from upstream to enable compilation on powerpc (closes:
+    Bug#477260)
+  * Added portugese translation for debconf (closes: Bug#469960,Bug#478358)
+  * Added german translation for debconf (closes: Bug#470499)
+  * Added galician translation (closes: Bug#477940)
+  * Added russian translation (closes: Bug#477983)
+  * Added finnish translation (closes: Bug#477984)
+  * Added vietnamese translation (closes: Bug#478221)
+  * Changed debconf variable type to boolean (closes: Bug#469256)
+  * Added debian/watch file (closes: Bug#474752)
+
+ -- Khalid Aziz <khalid@debian.org>  Tue, 01 Apr 2008 09:53:50 -0600
+
+kexec-tools (20080227-2) unstable; urgency=low
+
+  * Fixed a bad dependency in kexec-load init script 
+  * Changed the priority of debconf question to medium.
+
+ -- Khalid Aziz <khalid@debian.org>  Mon, 03 Mar 2008 09:08:09 -0700
+
+kexec-tools (20080227-1) unstable; urgency=low
+
+  * New upstream version
+  * Updated init scripts to remove bash'ism (closes: Bug#465000, Bug#462554)
+  * Updated init scripts to add reverse dependency on umountroot 
+    (closes: Bug#458983)
+  * Added autofs to Required-Stop for kexec-load init script to ensure 
+    a kexec load of a kernel on an automounted filesystem is successful 
+    (closes: Bug#440979)
+  * Changed the kexec-load init script execution order to run before autofs
+    (closes: Bug#440979)
+  * Added debconf options to ask user whether to enable kexec by default 
+    or not
+  * Updated package description in control file
+  * Updated kexec man page to remove the note about lack of support for 
+    compressed kernels (closes: Bug#464813)
+
+ -- Khalid Aziz <khalid@debian.org>  Thu, 28 Feb 2008 14:19:40 -0700
+
+kexec-tools (20070330-4) unstable; urgency=low
+
+  * Added another condition around strip command to address build failure on
+    architectures that do not generate kexec_test.static image.
+
+ -- Khalid Aziz <khalid@debian.org>  Thu, 01 Nov 2007 14:19:13 -0600
+
+kexec-tools (20070330-3) unstable; urgency=low
+
+  * Made command to strip kexec_test binary conditional (closes: Bug#437251)
+  * Removed mv command that caused build failure on a few architectures 
+    (closes: Bug#441128)
+  * Dropped powerpc and alpha architectures from supported arch list (closes:
+    Bug#338846)
+
+ -- Khalid Aziz <khalid@debian.org>  Wed, 31 Oct 2007 15:12:11 -0600
+
+kexec-tools (20070330-2) unstable; urgency=low
+
+  * Changed /etc/default/kexec to enable kexec reboots by default 
+    (closes: Bug#426506)
+  * Cleaned up unnecessary files
+  * Updated LSB header in init scripts (closes: Bug#429633)
+  * closes: Bug#392231 (upstream has removed the offending code)
+
+ -- Khalid Aziz <khalid@debian.org>  Mon, 11 Jun 2007 16:03:25 -0600
+
+kexec-tools (20070330-1) experimental; urgency=low
+
+  * New upstream version from Simon Horman's kexec-tools-testing tree. 
+
+ -- Khalid Aziz <khalid@debian.org>  Fri, 30 Mar 2007 09:32:27 -0600
+
+kexec-tools (1.101-kdump10-2) unstable; urgency=low
+
+  * Moved the install location for kexec_test to /usr/lib (closes: Bug#392395)
+
+ -- Khalid Aziz <khalid@debian.org>  Fri, 13 Oct 2006 08:31:16 -0600
+
+kexec-tools (1.101-kdump10-1) unstable; urgency=low
+
+  * Applied -kdump10 patch from http://lse.sf.net/kdump
+  * man page updated from -kdump10 patch (closes: Bug#344486)
+  * Better error reporting for when kexec_load fails on x86_64 (closes:
+    Bug#385611)
+  * Fixed a typo in x86_64 code (closes: Bug#385611)
+  * Improved init scripts
+  * Update architecture list in control file with the supported architectures
+    only (closes: Bug#338846)
+
+ -- Khalid Aziz <khalid@debian.org>  Mon, 09 Oct 2006 14:58:48 -0600
+
+kexec-tools (1.101-2.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Add support for init scripts (Closes: #387599, #378880, #344489)
+  * Bumped Standards Version
+
+ -- Julien Danjou <acid@debian.org>  Mon,  2 Oct 2006 14:42:42 +0200
+
+kexec-tools (1.101-2) unstable; urgency=low
+
+  * Fixed build failures (closes: Bug#327639, Bug#327715)
+
+ -- Khalid Aziz <khalid@debian.org>  Thu, 15 Sep 2005 08:57:43 -0600
+
+kexec-tools (1.101-1) unstable; urgency=low
+
+  * Initial release (closes: Bug#320202, Bug#318881)
+
+ -- Khalid Aziz <khalid@debian.org>  Fri, 09 Sep 2005 14:06:19 -0600
+

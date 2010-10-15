@@ -1,0 +1,40 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## static_binary_warning.dpatch by  <khalid@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: This patch adds fixes to keep lintian happy
+
+@DPATCH@
+diff -urN --exclude=debian kexec-tools-2.0.0/kexec_test/Makefile kexec-tools-2.0.0.debian/kexec_test/Makefile
+--- kexec-tools-2.0.0/kexec_test/Makefile	2008-02-27 10:12:52.000000000 -0700
++++ kexec-tools-2.0.0.debian/kexec_test/Makefile	2008-02-27 10:12:08.000000000 -0700
+@@ -20,7 +20,7 @@ ifeq ($(BUILD_KEXEC_TEST),yes)
+ KEXEC_TEST_OBJS = $(call objify, $(KEXEC_TEST_SRCS))
+ KEXEC_TEST_DEPS = $(call depify, $(KEXEC_TEST_OBJS))
+ 
+-KEXEC_TEST = $(PKGLIBDIR)/kexec_test
++KEXEC_TEST = $(PKGLIBDIR)/kexec_test.static
+ 
+ clean += $(KEXEC_TEST_OBJS) $(KEXEC_TEST_DEPS) $(KEXEC_TEST)
+ 
+@@ -36,5 +36,6 @@ $(KEXEC_TEST): LDFLAGS=-melf_i386 -e _st
+ $(KEXEC_TEST): $(KEXEC_TEST_OBJS)
+ 	mkdir -p $(@D)
+ 	$(TARGET_LD) $(LDFLAGS) -o $@ $^
++	strip $@
+ 
+ endif
+diff -urN --exclude=debian kexec-tools-testing-20080227/Makefile.in kexec-tools-20080227.debian/Makefile.in
+--- kexec-tools-testing-20080227/Makefile.in	2008-02-27 10:12:52.000000000 -0700
++++ kexec-tools-20080227.debian/Makefile.in	2008-02-27 10:12:08.000000000 -0700
+@@ -103,8 +103,8 @@
+ 
+ MAN_PAGES:= $(MANDIR)/man8/kexec.8
+ MAN_PAGES+= $(MANDIR)/man8/kdump.8
+-BINARIES_i386:=  $(SBINDIR)/kexec $(PKGLIBDIR)/kexec_test
+-BINARIES_x86_64:=$(SBINDIR)/kexec $(PKGLIBDIR)/kexec_test
++BINARIES_i386:=  $(SBINDIR)/kexec $(PKGLIBDIR)/kexec_test.static
++BINARIES_x86_64:=$(SBINDIR)/kexec $(PKGLIBDIR)/kexec_test.static
+ BINARIES:=$(SBINDIR)/kexec $(SBINDIR)/kdump $(BINARIES_$(ARCH))
+ 
+ TARGETS:=$(BINARIES) $(MAN_PAGES)

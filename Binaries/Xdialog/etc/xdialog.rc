@@ -1,0 +1,6 @@
+style 'linbo' {
+ font = "-bitstream-bitstream vera sans mono-bold-r-normal-*-*-180-*-*-p-*-iso8859-1"
+ }
+
+class  "*" style "linbo"
+widget "*" style "linbo"

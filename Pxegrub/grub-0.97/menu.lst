@@ -1,0 +1,15 @@
+default         0
+timeout		10
+
+fallback 1
+
+title		Local
+rootnoverify	(0x80)
+chainloader +1
+boot
+
+title		Linbo
+root		(nd)
+kernel          /linbo server=192.168.2.1 nmi_watchdog=0 highres=off debug nolapic acpi=off pci=bios
+initrd          /linbofs.gz
+boot

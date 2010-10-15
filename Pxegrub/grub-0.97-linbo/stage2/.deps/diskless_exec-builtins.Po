@@ -1,0 +1,73 @@
+diskless_exec-builtins.o diskless_exec-builtins.o: builtins.c shared.h \
+  ../config.h ../stage1/stage1.h mb_header.h mb_info.h filesys.h \
+  pc_slice.h term.h ../netboot/grub.h ../netboot/osdep.h \
+  ../netboot/byteswap.h ../netboot/endian.h ../netboot/i386_endian.h \
+  ../netboot/i386_byteswap.h ../netboot/types.h ../netboot/stdint.h \
+  ../netboot/little_bswap.h ../netboot/in.h ../netboot/ip.h \
+  ../netboot/udp.h ../netboot/if_ether.h ../netboot/latch.h \
+  ../netboot/io.h ../netboot/nic.h ../netboot/dev.h ../netboot/isa.h \
+  ../netboot/pci.h serial.h terminfo.h apic.h smp-imps.h md5.h
+
+shared.h:
+
+../config.h:
+
+../stage1/stage1.h:
+
+mb_header.h:
+
+mb_info.h:
+
+filesys.h:
+
+pc_slice.h:
+
+term.h:
+
+../netboot/grub.h:
+
+../netboot/osdep.h:
+
+../netboot/byteswap.h:
+
+../netboot/endian.h:
+
+../netboot/i386_endian.h:
+
+../netboot/i386_byteswap.h:
+
+../netboot/types.h:
+
+../netboot/stdint.h:
+
+../netboot/little_bswap.h:
+
+../netboot/in.h:
+
+../netboot/ip.h:
+
+../netboot/udp.h:
+
+../netboot/if_ether.h:
+
+../netboot/latch.h:
+
+../netboot/io.h:
+
+../netboot/nic.h:
+
+../netboot/dev.h:
+
+../netboot/isa.h:
+
+../netboot/pci.h:
+
+serial.h:
+
+terminfo.h:
+
+apic.h:
+
+smp-imps.h:
+
+md5.h:

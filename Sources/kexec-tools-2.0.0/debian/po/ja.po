@@ -1,0 +1,33 @@
+# Copyright (C) 2008 Khalid Aziz <khalid@debian.org>
+# This file is distributed under the same license as kexec-tools package.
+# Hideki Yamane (Debian-JP) <henrich@debian.or.jp>, 2008.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: kexec-tools 20080324-2\n"
+"Report-Msgid-Bugs-To: kexec-tools@packages.debian.org\n"
+"POT-Creation-Date: 2008-04-25 10:38-0600\n"
+"PO-Revision-Date: 2008-12-28 22:26+0900\n"
+"Last-Translator: Hideki Yamane (Debian-JP) <henrich@debian.or.jp>\n"
+"Language-Team: Japanese <debian-japanese@lists.debian.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. Type: boolean
+#. Description
+#: ../kexec-tools.templates:1001
+msgid "Should kexec-tools handle reboots?"
+msgstr "kexec-tools で再起動をハンドルしますか?"
+
+#. Type: boolean
+#. Description
+#: ../kexec-tools.templates:1001
+msgid ""
+"If you choose this option, a system reboot will trigger a restart into a "
+"kernel loaded by kexec instead of going through the full system bootloader "
+"process."
+msgstr ""
+"このオプションを選んだ場合、通常システムのブートローダ手順通りではなく、"
+"kexec からロードされたカーネルから再起動するようにシステムの再起動が設定され"
+"ます。"

@@ -1,0 +1,95 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## crashdump_warning.dpatch by  <mckinstry@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Adds warnings if crashdump kernel fails to load
+
+@DPATCH@
+diff -urNp --exclude=debian kexec-tools-0.20070319.rc/kexec/arch/x86_64/crashdump-x86_64.c kexec-tools-testing-20070319-rc/kexec/arch/x86_64/crashdump-x86_64.c
+--- kexec-tools-0.20070319.rc/kexec/arch/x86_64/crashdump-x86_64.c	2007-03-07 01:52:54.000000000 -0700
++++ kexec-tools-testing-20070319-rc/kexec/arch/x86_64/crashdump-x86_64.c	2007-03-29 17:30:45.000000000 -0600
+@@ -593,7 +593,9 @@ int load_crashdump_segments(struct kexec
+ 	memset(memmap_p, 0, sz);
+ 	add_memmap(memmap_p, BACKUP_SRC_START, BACKUP_SRC_SIZE);
+ 	sz = crash_reserved_mem.end - crash_reserved_mem.start +1;
+-	add_memmap(memmap_p, crash_reserved_mem.start, sz);
++	if (add_memmap(memmap_p, crash_reserved_mem.start, sz) < 0) {
++		return ENOCRASHKERNEL;
++	}
+ 
+ 	/* Create a backup region segment to store backup data*/
+ 	sz = (BACKUP_SRC_SIZE + align - 1) & ~(align - 1);
+@@ -602,14 +604,14 @@ int load_crashdump_segments(struct kexec
+ 	info->backup_start = add_buffer(info, tmp, sz, sz, align,
+ 				0, max_addr, 1);
+ 	if (delete_memmap(memmap_p, info->backup_start, sz) < 0)
+-		return -1;
++		return EFAILED;
+ 
+ 	/* Create elf header segment and store crash image data. */
+ 	if (crash_create_elf64_headers(info, &elf_info,
+ 				       crash_memory_range, nr_ranges,
+ 				       &tmp, &sz,
+ 				       ELF_CORE_HEADER_ALIGN) < 0)
+-		return -1;
++		return EFAILED;
+ 
+ 	/* Hack: With some ld versions (GNU ld version 2.14.90.0.4 20030523),
+ 	 * vmlinux program headers show a gap of two pages between bss segment
+diff -urNp --exclude=debian kexec-tools-0.20070319.rc/kexec/arch/x86_64/kexec-elf-x86_64.c kexec-tools-testing-20070319-rc/kexec/arch/x86_64/kexec-elf-x86_64.c
+--- kexec-tools-0.20070319.rc/kexec/arch/x86_64/kexec-elf-x86_64.c	2007-03-07 01:52:54.000000000 -0700
++++ kexec-tools-testing-20070319-rc/kexec/arch/x86_64/kexec-elf-x86_64.c	2007-03-29 17:31:42.000000000 -0600
+@@ -241,7 +241,7 @@ int elf_x86_64_load(int argc, char **arg
+ 			rc = load_crashdump_segments(info, modified_cmdline,
+ 							max_addr, 0);
+ 			if (rc < 0)
+-				return -1;
++				return rc;
+ 			/* Use new command line. */
+ 			command_line = modified_cmdline;
+ 			command_line_len = strlen(modified_cmdline) + 1;
+diff -urNp --exclude=debian kexec-tools-0.20070319.rc/kexec/kexec.c kexec-tools-testing-20070319-rc/kexec/kexec.c
+--- kexec-tools-0.20070319.rc/kexec/kexec.c	2007-03-18 22:38:50.000000000 -0600
++++ kexec-tools-testing-20070319-rc/kexec/kexec.c	2007-03-29 17:36:06.000000000 -0600
+@@ -625,10 +625,20 @@ static int my_load(const char *type, int
+ 			}
+ 		}
+ 	}
+-	if (file_type[i].load(argc, argv, kernel_buf,
+-			      kernel_size, &info) < 0) {
+-		fprintf(stderr, "Cannot load %s\n", kernel);
+-		return -1;
++	result = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
++	if (result < 0) {
++		switch (result) {
++		case ENOCRASHKERNEL:
++			fprintf(stderr,
++				"No crash kernel segment found in /proc/iomem\n"
++				"Please check the crashkernel= boot parameter.\n");
++				break;
++		case EFAILED:
++		default:
++			fprintf(stderr, "Cannot load %s\n", kernel);
++			break;
++		}
++		return result;
+ 	}
+ 	/* If we are not in native mode setup an appropriate trampoline */
+ 	if (arch_compat_trampoline(&info) < 0) {
+diff -urNp --exclude=debian kexec-tools-0.20070319.rc/kexec/kexec.h kexec-tools-testing-20070319-rc/kexec/kexec.h
+--- kexec-tools-0.20070319.rc/kexec/kexec.h	2007-03-18 22:38:50.000000000 -0600
++++ kexec-tools-testing-20070319-rc/kexec/kexec.h	2007-03-29 17:38:13.000000000 -0600
+@@ -52,6 +52,13 @@
+ #error unknwon BYTE_ORDER
+ #endif
+ 
++/*
++ * Document some of the reasons why crashdump may fail, so we can give
++ * better error messaging
++ */
++
++#define		EFAILED		-1	/* default error code */
++#define		ENOCRASHKERNEL	-2	/* no memory reserved for crashkernel */
+ 
+ #if 0
+ /*

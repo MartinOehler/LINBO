@@ -1,0 +1,14 @@
+DEFAULT LINBO
+# APPEND initrd=linbofs.gz debug acpi=noirq nacpi noapic nolapic nolapic_timer highres=off noisapnp pnpbios=off pci=bios notsc vga=785 quiet test="this is a test"
+# APPEND initrd=linbofs.gz debug acpi=noirq nolapic idebus=66 pci=irqmask=0x0a59,routeirq reset_devices agp=off enable_8254_timer enable_timer_pin_1 acpi_pm_good clocksource=acpi_pm hpet=force nohz=off no_timer_check usepirqmask use_crs nosync highres=off nomce vga=785 quiet test="this is a test"
+# Die Zeile geht mit grub.exe:
+# APPEND initrd=linbofs.gz debug noapic nolapic pnpbios=off pci=nommconf clocksource=pit iommu=usedac nomce vga=785 quiet test="this is a test"
+# check: acpi=off noapic
+APPEND initrd=linbofs.gz acpi=off noapic nolapic irqpoll pci=routeirq pnpbios=off nomce vga=785 quiet
+TIMEOUT 30
+KBDMAP /german.kbd
+PROMPT 1
+DISPLAY /boot.msg
+LABEL LINBO
+KERNEL linbo
+APPEND initrd=linbofs.gz acpi=off noapic nolapic irqpoll pci=routeirq pnpbios=off nomce vga=785 quiet

@@ -1,0 +1,9 @@
+patching file kexec/arch/x86_64/crashdump-x86_64.c
+Hunk #1 succeeded at 592 (offset -1 lines).
+Hunk #2 succeeded at 603 (offset -1 lines).
+patching file kexec/arch/x86_64/kexec-elf-x86_64.c
+Hunk #1 succeeded at 246 (offset 5 lines).
+patching file kexec/kexec.c
+Hunk #1 succeeded at 651 with fuzz 1 (offset 26 lines).
+patching file kexec/kexec.h
+Hunk #1 succeeded at 55 (offset 3 lines).

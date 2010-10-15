@@ -1,0 +1,7 @@
+QMAKE_PRL_BUILD_DIR = /mnt/knoppix.build/LINBO/GUI/qt-embedded-free-3.3.7/src
+QMAKE_PRO_INPUT = qt.pro
+QMAKE_PRL_TARGET = libqte.a
+QMAKE_PRL_DEFINES = QT_NO_DEBUG
+QMAKE_PRL_CONFIG = qt link_prl nocrosscompiler minimal-config small-config medium-config large-config full-config styles tools kernel widgets dialogs iconview workspace canvas table xml release staticlib embedded mng jpeg png no-gif zlib bigcodecs dylib create_prl link_prl qt warn_on depend_includepath qmake_cache create_libtool create_pc moc x11lib
+QMAKE_PRL_VERSION = 3.3.7
+QMAKE_PRL_LIBS =  -ldl 

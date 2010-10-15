@@ -1,0 +1,44 @@
+INSTALL:
+--------
+
+	you need to compile these files under CYGWIN
+	get GRUB, for example in the directory /usr/local/src/grub-0.97
+	install these files in grub-0.97/win32
+	run "make" in the win32 directory
+
+
+Usage:
+------
+
+1) get a compiled stage1 and stage2 image and put these in C:\boot
+   for example compiled on a linux machine
+
+2) add the following line to the file C:\boot.ini
+
+   C:\boot\stage1="GRUB"
+
+   you may need to do 
+
+	   ATTRIB -R -H -S C:\boot.ini
+
+   to make the file visible and writable and 
+
+	   ATTRIB +R +H +S C:\boot.ini
+
+   to revert the attributes of the file
+
+3) run w32grub
+   This will update the embedded blocklists in the files stage1 and stage2
+
+   You should rerun this utility after moving/changing the files stage1 or stage2
+   and after running tools like defragmentation
+
+   w32grub -d device -1 stage1 -2 stage2 -m menu
+       -d (hd0,0)      : partition where the files are
+       -1 C:/boot/stage1 : boot sector
+       -2 C:/boot/stage2 : secondary boot loader
+       -m /boot/grub/menu.lst : grub boot menu
+
+       device must be a GRUB partition identifier
+       stage1 and stage2 must be fullpaths(including drive letter) to win32 file names
+  

@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+qt_config=qt link_prl nocrosscompiler minimal-config small-config medium-config large-config full-config styles tools kernel widgets dialogs iconview workspace canvas table xml release staticlib embedded mng jpeg png no-gif zlib bigcodecs dylib create_prl link_prl qt warn_on depend_includepath qmake_cache create_libtool create_pc moc x11lib
+
+Name: Qt
+Description: Libqte.a Library
+Version: 3.3.7
+Libs: -L${libdir} -lqte  -ldl 
+Cflags: -DQT_NO_DEBUG  -I${includedir}

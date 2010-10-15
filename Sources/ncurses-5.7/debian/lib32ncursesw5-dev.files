@@ -1,0 +1,11 @@
+emul/ia32-linux/usr/lib/libncursesw.so
+emul/ia32-linux/usr/lib/libticw.so
+emul/ia32-linux/usr/lib/libformw.so
+emul/ia32-linux/usr/lib/libmenuw.so
+emul/ia32-linux/usr/lib/libpanelw.so
+emul/ia32-linux/usr/lib/libncursesw.a
+emul/ia32-linux/usr/lib/libncurses++w.a
+emul/ia32-linux/usr/lib/libticw.a
+emul/ia32-linux/usr/lib/libformw.a
+emul/ia32-linux/usr/lib/libmenuw.a
+emul/ia32-linux/usr/lib/libpanelw.a

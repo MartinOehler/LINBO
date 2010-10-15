@@ -1,0 +1,26 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+## update_kexec_manpage.dpatch by  <khalid@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: This patch updates kexec man page
+
+@DPATCH@
+diff -urN --exclude=debian kexec-tools-2.0.0/kexec/kexec.8 kexec-tools-2.0.0.debian/kexec/kexec.8
+--- kexec-tools-2.0.0/kexec/kexec.8	2009-04-15 14:42:12.000000000 -0600
++++ kexec-tools-2.0.0.debian/kexec.8	2009-04-16 10:42:03.000000000 -0600
+@@ -105,13 +105,13 @@ command:
+ .SH OPTIONS
+ .TP
+ .B \-e\ (\-\-exec)
+-Run the currently loaded kernel.
++Run the currently loaded kernel. Note that it calls shutdown (8)
+ .TP
+ .B \-f\ (\-\-force)
+ Force an immediate
+ .B kexec
+ call, do not call
+-.BR shutdown (1)
++.BR shutdown (8)
+ (contrary to the default action without any option parameter). This option
+ performs the same actions like executing
+ .IR -l

@@ -1,0 +1,210 @@
+GNU/Linux Network Boot System
+=============================
+
+(Stand: Milestone 1, 28.07.2006)
+
+LINBO Kernel
+------------
+
+LINBO besteht in der aktuellen Version aus einem projektintern "BBBB" *)
+getauften Binary File, das bootfähig komprimiert den eigentlichen
+Linux-Kernel, sowie ein initramfs mit allen eingebetteten Programmen
+(teils statisch gelinkt, teils dynamisch mit integrierten Libraries)
+enthält.
+
+Der BBBB kann wie ein normaler Linux-Kernel gebootet werden, z.B.:
+- "Raw" auf einer Festplattenpartition, die per MBR oder BIOS-Einstellung
+  gebootet wird,
+- Auf bootfähigen Memorystick mit dd kopiert (dd if=LINBO.bin of=/dev/sda),
+- Per PXE als Bootkernel (ohne initrd!) exportiert,
+- Im Emulator gebootet, siehe "Testing".
+
+Kernel Version ist 2.6.17.6 (die derzeit verfügbare stabile
+Kernel-Version), ohne Patches. Die Knoppix-spezifischen Module cloop und
+unionfs wurden nicht verwendet, da sie auf dem ohnehin schreibbaren und
+komprimierten initramfs nicht gebraucht werden.
+
+*) BBBB = "Big Bad Binary Blob", der Name resultiert aus der Tatsache,
+dass sämtliche Linbo-Komponenten (bis auf die, die in Phase 2 bzw. vom
+Server nachgeladen werden), in einer einzigen komprimierten Binärdatei
+vorhanden sind, was das Handling sehr einfach macht.
+
+Testing
+-------
+
+LINBO.bin kann wie ein normaler Linux-Kernel, mit oder ohne
+Kernel-Parameter, mit den üblichen Methoden gebootet werden.
+
+Um das Booten von Linux aus LINBO heraus zu testen, ist ein
+Harddisk-Image für vmware bzw. qemu im Buildsystem mitgeliefert, das
+drei Partitionen (DOS, Linux, Linux) mit zwei bootfähigen
+Linux-Minisystemen enthält, eins mit und eins ohne innitrd. Diese werden
+in der LINBO-Oberfläche aufgelistet und per Klick gebootet.
+
+Mit folgender qemu(0.8)-Kommandozeile haben wir LINBO mit dem mitgelieferten
+HD-Image getestet:
+
+qemu -hda hda.img -net nic -kernel LINBO.bin
+
+Per Makefile im LINBO-Buildsystem (siehe LINBO-Buildsystem) funktioniert dies
+mit
+
+make test
+
+Funktionen in Milestone/Phase 1
+-------------------------------
+
+erreichte Ziele:
+
+- Hardwareerkennung zunächst nur per Kernel (Festplatten, Netzwerk)
+
+- Starten von X (Xorg Version 7.0.22) und LINBO-GUI mit Mausunterstützung
+  ("standard" PS/2 und USB/IMPS2-Mäuse sollten automatisch erkannt werden)
+
+- Scannen von lokalen Partitionen, Suche nach bootfähigen Kernels
+  (bei Windows: grub4dos.exe, noch nicht getestet)
+
+- Auswahl einer Partition, Booten des dort installierten Kernels per kexec.
+
+- Zu Debugging-Zwecken wird in Phase 1 unterhalb des LINBO-GUI eine
+Root-Shell-Konsole geöffnet, in der die Bourne-Shell-kompatible Busybox
+läuft. Dieses Feature wird in der Endversion entfernt bzw. als
+"Admin-only" zuschaltbar gemacht.
+
+TODO (Phase 2-3):
+
+- Deutsches Tatstaturlayout für Konsole und X. Eigentlich wird die
+Tastatur nicht gebraucht, da das GUI Mausgesteuert wird. Für die
+Debug-Konsole und die spätere Lauffähigkeit im alternativen Textmodus
+(Accessibility) sollte die Tastatur aber auf das gewünschte Layout
+einstellbar sein.
+
+- Mehrsprachigkeit: Die in LINBO verwendeten Texte und Online-Hilfe ist
+derzeit komplett in deutscher Sprache konfiguriert. In Hinblick auf
+Integration in internationale Projekte (z.B. Skolelinux,
+Minerva-EU-Projekt etc.) sollte die Oberfläche jedoch auch zumindest in
+Englisch konfigurierbar sein. Das Buildsystem und die Kommentare in den
+Quellen sind bereits in englischer Sprache verfasst, da die Endbenutzer
+damit gar nicht in Kontat kommen.
+
+- Geschwindigkeit: Da in dieser Testversion sämtliche Treiber im
+LINBO-Kernel monolithisch integriert sind dauert die reine
+Hardwareerkennung verhleichsweise lange, während das Starten des
+X-Servers und der Aufbau der Oberfläche überraschenderweise kaum mehr
+als eine Sekunde in Anspruch nimmt. Im qemu auf einem Pentium 4 / 1200
+MHz dauert das Booten vom Laden des Kernels bis in die graphische
+Oberfläche ca. 12 Sekunden, was von uns als viel zu langsam angesehen
+wird. Wenn die Treiber für Festplatten und Netz in Phase 2 modular
+während dem Start des GUI zur Laufzeit nachgeladen werden, und der
+Kernel selbst NUR die SVGA-Unterstützung enthält, sollte sich die
+Bootzeit bis zur GUI-Darstellung drastisch verkürzen. Wir streben 5-6
+Sekunden vom Start des Kernels bis zum GUI an.
+
+- Windows-Boot (hierfür ist eine kleine Windows-Testinstallation mit
+integriertem grub4dos erforderlich, Martin Öhler arbeitet dran).
+
+- Netzwerkanbindung an den Server und Übergabemöglichkeit für Parameter
+(z.B. mit einer in LNBO.bin integrierten Liste, die durch die vom
+DHCP-Server vergebene IP-Adresse für diesen Rechner, oder die MAC der
+Netzwerkkarte, aktiviert wird).
+
+- Reparaturfunktion
+  
+  - aus dem Cache
+
+  - vom Server
+
+Experimente für später:
+
+- Kleiner Window-Manager? Evtl. unnötig, da sich in der derzeitigen
+Oberfläche keine Fenster überlagern können, aber Menüfunktion möglich.
+
+- Neu programmierte QT-Oberfläche für die Partitionsauswahl?
+
+- Integration eines graphischen Partitionierungsprogramms zur
+interativen Partitionierung?
+
+- Kleiner Browser als Option, um LINBO auch als "standalone-Surfsystem"
+laufen lassen zu können, ohne Beriebssystem auf Platte?
+
+
+LINBO-Buildsystem
+-----------------
+
+Systemvoraussetzungen:
+
+- Installiertes POSIX-konformes Betriebssystem mit Bourne-kompatibler
+  Shell (Cygwin sollte auch funktionieren)
+
+- GNU-Tar (zum Entpacken das Archives)
+
+- GNU-Make
+
+- GNU C-Compiler Version 3.x oder höher
+
+- GNU-Binutils (zum Compilieren verschiedener Kernel-Komponenten notwendig)
+
+- Root-Rechte sind zum Bauen von LINBO NICHT erforderlich.
+  Das Kernel-Buildsystem sorgt dafür, dass die Dateien im BBBB die
+  erforderlichen Rechte erhalten, und dass Device-Dateien korrekt angelegt werden,
+  daher kann als normaler User am System gearbeitet werden.
+
+Der Bau des BBBB wird durch ein Makefile im LINBO-Verzeichnis gesteuert.
+"make" ohne Parameter liefert eine Kurzhilfe. Die einzelnen Schritte
+des Bauvorgangs sind recht selbsterklärend.
+
+Verzeichnisse:
+
+"Binaries" enthält statische Binaries sowie dynamische Executables und
+Libraries für das initramfs. Die Binaries/*.sh-Dateien sind
+Shellskripte, die in LINBO den Bootvorgang und das GUI steuern. Die für
+LINBO benötigten Dateien und Libraries werden per initramfs.conf
+(Verzeichnis "Kernel") verwaltet. Dort sind auch neu hinzugefügte
+Dateien einzutragen, wenn sie in das initramfs/BBBB aufgenommen werden
+sollen.
+
+"Graphics" enthält die Quellen des LINBO-Logos Binaries/linbo.xpm, das
+im GUI dargestellt wird.
+
+"Documentation" wird später das Benutzer- und Administrationshandbuch
+von LINBO enthalten.
+
+"Kernel" enthält den für LINBO verwendeten Linux-Kernel-Source. Wenn
+dieser aktualisiert wird, sollte die alte .config-Datei weiterverwendet
+werden, da sie die für das initramfs notwendigen Einstellungen enthält.
+Innerhalb der Kernel-Quellen in Kernel/linux-2.6.17.6 ist initramfs ist
+ein Symlink auf das "Binaries"-Verzeichnis, initramfs.conf ein Symlink
+auf initramfs.conf im Kernel-Verzeichnis, womit das
+initramfs-Dateisystem verwaltet wird.
+
+"Images" enthält den fertig gebauten LINBO-Kernel als Hardlink auf
+Kernel/linux-*/arch/i386/boot/bzImage, sowie evtl. in Phase 2 Bootimages
+und Archive für verschiedene Datenträger zur Installation von LINBO auf
+dem Bootserver.
+
+"Sources" ist ein Archiv der für die gebauten Binaries verwendeten
+Quelltexte, um die Binaries selbst neu bauen zu können, und die GNU
+GENERAL PUBLIC LICENSE §3 zu erfüllen. Für das Buildsystem ist das
+Verzeichnis eigentlich irrelevant, da es im Makefile nicht verwendet
+wird. Neu integrierte Programme sollten jedoch gewissenhaft in Sources
+akchiviert werden (Debian: cd Sources ; apt-get source paketname).
+
+Bauvorgang:
+
+Durch "make" ohne Parameter dokumentiert:
+
+knopper@Koffer:/mnt/knoppix.build/LINBO$ make
+---
+WELCOME TO THE LINBO BUILD SYSTEM
+
+make linbo      (Re-)Compile a LINBO-Kernel
+make config     Configure LINBO kernel and edit LINBO filesystem.
+make clean      Cleanup LINBO kernel source for recompilation.
+make test       Run LINBO in qemu
+(That's all we do, for now.)
+
+Don't worry about the sequence of build commands, this Makefile will tell you
+what to do first, in case anything is missing.
+
+Have a lot of fun. ;-)
+---

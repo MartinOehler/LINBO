@@ -1,0 +1,16 @@
+diskless_exec-hercules.o diskless_exec-hercules.o: hercules.c shared.h \
+  ../config.h ../stage1/stage1.h mb_header.h mb_info.h hercules.h term.h
+
+shared.h:
+
+../config.h:
+
+../stage1/stage1.h:
+
+mb_header.h:
+
+mb_info.h:
+
+hercules.h:
+
+term.h:

@@ -1,0 +1,7 @@
+Template: kexec-tools/load_kexec
+Type: boolean
+Default: true
+_Description: Should kexec-tools handle reboots?
+ If you choose this option, a system reboot will trigger a restart
+ into a kernel loaded by kexec instead of going through the full
+ system bootloader process.

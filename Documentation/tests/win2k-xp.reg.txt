@@ -1,0 +1,15 @@
+Der Patch war erfolgreich, wenn
+
+- im Anmeldefenster der Benutzername leer ist;
+
+- im Anmeldefenster bei "Anmelden an:" die Windowsdomäne voreingestellt ist;
+
+- im Anmeldefenster bei "Anmelden an:" in der Dropdown-Liste der lokale Hostname zur Anmeldung ausgewählt werden kann;
+
+- unter Arbeitsplatz | Eigenschaften | Computername der lokale Hostname angezeigt wird;
+
+- alle gepatchten Strings (Hostname, Domänenname) nicht mit Anführungszeichen erscheinen.
+
+Das erfoglreiche Patchen der Hexwerte (dword) lässt sich nur mit Hilfe des Registrierungseditors überprüfen.
+Dazu im Startmenü über "Ausführen" regedit starten und an die entsprechenden Stellen navigieren.
+

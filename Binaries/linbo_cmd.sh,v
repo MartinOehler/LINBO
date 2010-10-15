@@ -1,0 +1,321 @@
+head	1.1;
+access;
+symbols;
+locks
+	knopper:1.1; strict;
+comment	@# @;
+
+
+1.1
+date	2007.06.22.01.56.15;	author knopper;	state Exp;
+branches;
+next	;
+
+
+desc
+@First checkin of linbo_cmd.sh
+@
+
+
+1.1
+log
+@Initial revision
+@
+text
+@#!/bin/sh
+# linbo_cmd - Backend worker script for LINBO
+# (C) Klaus Knopper 2007
+# License: GPL V2
+
+
+help(){
+echo "
+ Invalid LINBO command: $@@
+
+ Syntax: linbo_cmd command option1 option2 ...
+
+ Examples:
+ start bootdev rootdev kernel initrd append	-	boot OS" 1>&2
+}
+
+TMP="/tmp/linbo_cmd.$$.tmp"
+
+cmd="$1" ; shift # Command args are now $@@
+
+# fstype partition
+fstype(){
+ phead="$(dd if="$1" bs=128k count=2 2>/dev/null)"
+ RC="$?"
+ [ "$RC" = "0" ] || return "$RC"
+ case "$phead" in
+  *NTFS*) echo "ntfs" ;;
+  *[Rr][Ee][Ii][Ss][Ee][Rr]*) echo "reiserfs" ;;
+  *) echo "auto" ;;
+ esac
+ return 0
+}
+
+
+# mountpart partition destdir [options]
+mountpart(){
+ type=""
+ for i in 1 2 3 4 5; do
+  type="$(fstype $1)"
+  RC="$?"
+  [ "$RC" = "0" ] && break
+  [ "$i" = "5" ] && break
+  echo "Partition $1 ist noch nicht verfügbar, versuche erneut..."
+  sleep 2
+ done
+ [ "$RC" = "0" ] || { echo "Partition $1 ist nicht verfügbar, wurde die Platte schon partitioniert?" 1>&2; return "$RC"; }
+ case "$type" in
+  ntfs)
+   OPTS=force,silent,umask=0,no_def_opts,allow_other,streams_interface=windows
+   case "$3" in -r) OPTS="$OPTS,ro" ;; esac
+   ntfs-3g -o "$OPTS" "$1" "$2"
+   ;;
+  *)
+   mount $3 "$1" "$2"
+   ;;
+ esac
+ return "$?"
+}
+
+# mountcache partition [options]
+mountcache(){
+ mountpart "$1" /cache $2
+ return "$?"
+}
+
+# format dev fs
+format(){
+ case "$2" in
+  swap) mkswap -v "$1" ;;
+  reiserfs) mkreiserfs -f -f  "$1" ;;
+  ext2) mke2fs -m 0 "$1" ;;
+  ext3) mke2fs -m 0 -j "$1" ;;
+ esac
+}
+
+# partition dev1 size1 id1 bootable1 filesystem dev2 ...
+partition(){
+ table="# Partition Table
+unit: sectors
+"
+ formats=""
+ disk="${1%%[1-9]*}"
+ while [ "$#" -ge "5" ]; do
+  dev="$1"
+  [ -n "$dev" ] || continue
+  size=""
+  [ "$2" -gt 0 ] 2>/dev/null && size="$(($2 * 2))" # Kilobytes = sectors * 2
+  table="$table
+,$size,$3${4:+,*}"
+  [ -n "$5" ] && formats="$formats $dev,$5"
+  shift 5
+ done
+ dd if=/dev/zero of="$disk" bs=512 count=1
+ sfdisk -uS -f "$disk" <<EOT
+$table
+EOT
+ if [ "$?" = "0" ]; then
+  sleep 2
+  for i in $formats; do
+   format "${i%%,*}" "${i##*,}"
+  done
+ fi
+}
+
+# start boot root kernel initrd append
+start(){
+ if mountpart "$1" /mnt -r ; then
+  LOADED=""
+  if [ -r /mnt/"$3" ]; then
+   KERNEL="/mnt/$3"
+   INITRD=""
+   [ -n "$4" -a -r /mnt/"$4" ] && INITRD="--initrd=/mnt/$4"
+   APPEND="$5"
+   if [ -n "$2" ]; then
+    case "$3" in [Gg][Rr][Uu][Bb]*) ;; *) APPEND="$APPEND root=$2" ;; esac
+   fi
+   kexec -l $INITRD --append="$APPEND" $KERNEL && LOADED="true"
+  fi
+  umount /mnt
+ fi
+ if [ -n "$LOADED" ]; then
+  # We basically do a quick shutdown here.
+  echo -n "c" >/dev/console
+  killall5 -15
+  sleep 2
+  exec kexec -e
+  sleep 10
+ fi
+}
+
+# unpack imagefile targetdev
+unpack(){
+ IMAGE="$1"
+ COMMAND=""
+ OPTIONS=""
+ COMPRESSED=""
+ TARGET=""
+ echo "unpacking: $IMAGE $2"
+ case "$IMAGE" in *.[Gg][Zz]) COMPRESSED="-z" ;; esac
+ case "$IMAGE" in
+  *.[Ii][Mm][Gg]*)
+   if [ -n "$COMPRESSED" ]; then
+    # rsync does not support to sync from compressed files yet :-(
+    COMMAND="gzip"; OPTIONS="-dc"; TARGET="$2"; COMPRESSED=""
+   else
+    COMMAND="rsync"; OPTIONS="--progress -Hav"; TARGET="$2"
+   fi
+   ;;
+  *.[Tt][Aa][Rr]*)
+   COMMAND="/bin/tar"; OPTIONS="-x $COMPRESSED -C /mnt -f"; TARGET=""
+   mountpart "$2" "/mnt" || return 1
+   ;;
+ esac
+ RC=1
+ if [ -n "$COMMAND" -a -n "$OPTIONS" ]; then
+  if [ "$COMMAND" = "gzip" ]; then
+   $COMMAND $OPTIONS "$IMAGE" | dd of="$TARGET" bs=1024k
+  else
+   $COMMAND $OPTIONS "$IMAGE" $TARGET
+  fi
+  RC="$?"
+ fi
+ umount "/mnt" >/dev/null 2>&1
+ return "$RC"
+}
+
+# sync cachedev baseimage image bootdev rootdev kernel initrd
+syncl(){
+ mountcache "$1" -r || return "$?"
+ cd /cache
+ for i in "$2" "$3"; do
+  if [ -f "$i" ]; then
+   unpack "$i" "$5"
+  fi
+ done
+ cd /
+ umount /cache
+}
+
+# create cachedev imagefile bootdev rootdev kernel initrd
+create(){
+ [ -n "$2" -a -n "$1" -a -n "$4" ] || return 1
+ mountcache "$1" || return "$?"
+ cd /cache
+ COMPRESSED=""
+ RC="1"
+ echo "Erzeuge Image '$2' von Partition '$4'..."
+ case "$2" in *.[Gg][Zz]) COMPRESSED="-z" ;; esac
+ case "$2" in
+  *.[Tt][Aa][Rr]*)
+   mountpart "$4" /mnt -r || { echo "Root-Partition nicht mountbar." 1>&2; umount /cache; return 1; }
+   /bin/tar -c -C /mnt $COMPRESSED -f /cache/"$2" . ; RC="$?"
+   umount /mnt
+   ;;
+  *.[Ii][Mm][Gg]*)
+   if [ -n "$COMPRESSED" ]; then
+    dd if="$4" bs=1024k | gzip -9v >/cache/"$2" ; RC="$?"
+   else
+    dd if="$4" bs=1024k of=/cache/"$2" ; RC="$?"
+   fi
+   ;;
+ esac
+ cd /
+ umount /cache
+ return "$RC"
+}
+
+# download server file
+download(){
+ echo "Download $1 -> $2..."
+ atftp --get --remote-file "/$2" --local-file "$2" "$1"
+}
+
+# Sync from server
+# syncr server cachedev baseimage image bootdev rootdev kernel initrd
+syncr(){
+ mountcache "$2" || return "$?"
+ cd /cache
+ for i in "$3" "$4"; do
+  [ -n "$i" ] && download "$1" "$i"
+ done
+ cd /
+ umount /cache
+ shift 
+ syncl "$@@"
+}
+
+initcache(){
+ server="$1"
+ cachedev="$2"
+ mountcache "$cachedev" || return "$?"
+ cd /cache
+ shift; shift
+ for i in "$@@"; do
+  [ -n "$i" ] && download "$server" "$i"
+ done
+ cd /
+ umount /cache
+ update "$server" "$cachedev"
+}
+
+update(){
+ /bin/sh
+ server="$1"
+ cachedev="$2"
+ disk="${cachedev%%[1-9]*}"
+ mountcache "$cachedev" || return "$?"
+ cd /cache
+ download "$server" linbo
+ download "$server" linbofs.gz
+ cat >/etc/lilo.conf <<EOT
+lba32
+vga=771
+backup=/dev/null
+boot=$disk
+root=$cachedev
+compact
+ignore-table
+nowarn
+install=menu
+map=/cache/boot.map
+default=linbo
+
+image=/cache/linbo
+	label=linbo
+	initrd=/cache/linbofs.gz
+	append="quiet loglevel=0"
+	read-write
+EOT
+ lilo -P ignore -v </dev/null
+ cd /
+ umount /cache
+}
+
+### Main ###
+# DEBUG linbo_gui:
+# echo -n "Running: $cmd "
+# count=1
+# for i in "$@@"; do
+#  echo -n "$((count++))=$i,"
+# done
+# echo ""
+# sleep 1
+
+case "$cmd" in
+ create) create "$@@" ;;
+ start) start "$@@" ;;
+ partition) partition "$@@" ;;
+ initcache) initcache "$@@" ;;
+ sync) syncl "$@@" ;;
+ syncr) syncr "$@@" ;;
+ update) update "$@@" ;;
+ *) help "$cmd" "$@@" ;;
+esac
+
+sleep 1
+@

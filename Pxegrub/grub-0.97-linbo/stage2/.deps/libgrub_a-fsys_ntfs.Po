@@ -1,0 +1,1 @@
+libgrub_a-fsys_ntfs.o libgrub_a-fsys_ntfs.o: fsys_ntfs.c

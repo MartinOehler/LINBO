@@ -1,0 +1,66 @@
+#!/bin/sh
+# linbo_cmd - Backend worker script for LINBO
+# (C) Klaus Knopper 2007
+# License: GPL V2
+# Syntax: linbo_cmd [ -c start.conf] command
+# Per default, start.conf is searched in current directory.
+#
+# Commands.
+# start kernel initrd append - boot OS
+
+TMP="/tmp/linbo_cmd.$$.tmp"
+
+cmd="$1" ; shift # Command args are now $@
+
+# partition dev1 size1 id1 bootable1
+partition(){
+ table="# Partition Table
+unit: sectors"
+ while [ "$#" -ge "5" ]; do
+  table="$table
+$1 : start= , size=  $2, Id= $3${4:+, bootable}"
+  formats="$1 $5"
+  shift 5
+ done
+ echo "Partition table: $table" >&2
+ echo "Formats: $formats" >&2
+}
+
+start(){
+ if mount -r "$1" /mnt; then
+  LOADED=""
+  if [ -r /mnt/"$2" ]; then
+   KERNEL="/mnt/$2"
+   [ -n "$3" -a -r /mnt/"$3" ] && INITRD="--initrd=/mnt/$3"
+   kexec -l $INITRD --append="$4" $KERNEL && LOADED="true"
+  fi
+  umount /mnt
+ fi
+ if [ -n "$LOADED" ]; then
+  # We basically do a quick shutdown here.
+  echo -n "c" >/dev/console
+  killall5 -15
+  sleep 2
+  exec kexec -e
+  sleep 10
+ fi
+}
+
+# Main
+echo -n "Running: $cmd "
+count=1
+for i in "$@"; do
+ echo -n "$((count++))=$i,"
+done
+echo ""
+
+sleep 1
+case "$cmd" in
+ partition) partition "$@" ;;
+ start) start "$@" ;;
+ synchronize) synchronize "$2" ;;
+ getfromserver) synchronizefromserver "$2" ;;
+esac
+sleep 1
+echo "ERROR: $?" >&2
+

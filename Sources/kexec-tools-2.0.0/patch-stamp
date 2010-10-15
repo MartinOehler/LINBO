@@ -1,0 +1,27 @@
+Patches applied in the Debian version of :
+
+debian/patches/debianize.dpatch (<khalid@debian.org>):
+  This patch adds fixes to keep lintian happy
+
+debian/patches/crashdump_warning.dpatch (<mckinstry@debian.org>):
+  Adds warnings if crashdump kernel fails to load
+
+debian/patches/static_binary_warning.dpatch (<khalid@debian.org>):
+  This patch adds fixes to keep lintian happy
+
+debian/patches/distclean_fix.dpatch (<khalid@debian.org>):
+  This patch updates distclean to clean up stamp files upstream fails to
+
+debian/patches/arm_build.dpatch (<lool@babbage>):
+  Fixes build on arm; see Debian #489175
+
+debian/patches/update_kexec_manpage.dpatch (<khalid@debian.org>):
+  This patch updates kexec man page
+
+debian/patches/add_debian_readme.dpatch (<khalid@debian.org>):
+  This patch adds a README.debian file to explain debian specifc
+  packaging details
+
+debian/patches/configure.dpatch (<khalid@debian.org>):
+  This patch fixes a bug caused by autoconf 2.64 update
+

@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## distclean_fix.dpatch by  <khalid@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: This patch updates distclean to clean up stamp files upstream fails to
+
+@DPATCH@
+diff -urN --exclude=debian kexec-tools-2.0.0/Makefile.in kexec-tools-2.0.0.debian/Makefile.in
+--- kexec-tools-2.0.0/Makefile.in	2008-04-25 09:26:40.000000000 -0600
++++ kexec-tools-2.0.0.debian/Makefile.in	2008-04-25 09:27:52.000000000 -0600
+@@ -232,7 +232,7 @@ clean:
+ distclean: dist-clean
+ 
+ dist-clean: clean
+-	$(RM) -f config.log config.status config.cache Makefile include/config.h
++	$(RM) -f config.log config.status config.cache Makefile include/config.h include/stamp-h*
+	$(RM) -f include/config.h.in configure
+	$(RM) -rf autom4te.cache
+ 

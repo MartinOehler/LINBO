@@ -1,0 +1,50 @@
+#CFLAGS = -O4 -Wall -DNDEBUG -DLOSSTEST
+CFLAGS =-Wall -Wshadow -DBB_FEATURE_UDPCAST_FEC -D_FILE_OFFSET_BITS=64
+LDFLAGS =-s -Wl,-warn-common
+LIBS=-lpthread
+BUSYBOX=../udp-busybox/busybox-0.60.5
+
+ARCH = $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/)
+
+ifeq ($(ARCH),i386)
+CFLAGS += -DARCH_X86
+endif
+
+all: udp-receiver udp-sender udp-receiver.1 udp-sender.1
+#all: fec-test
+
+disk: udpcast.img.gz
+
+#disks: sender.img.gz receiver.img.gz
+
+clean:
+	rm -f *.o udp-sender udp-receiver udp-sender.1 udp-receiver.1 *~
+
+install: udp-sender udp-receiver
+	cp udp-sender udp-receiver /usr/sbin
+	cp udp-sender.1 udp-receiver.1 /usr/share/man/man1
+
+udp-sender: udp-sender.o socklib.o udpcast.o rate-limit.o \
+	sender-diskio.o senddata.o udps-negotiate.o \
+	fifo.o produconsum.o participants.o log.o statistics.o \
+	fec.o udpc_version.o
+	gcc $(LDFLAGS) $^ -lpthread -o $@
+
+
+udp-receiver: udp-receiver.o socklib.o udpcast.o \
+	receiver-diskio.o receivedata.o udpr-negotiate.o produconsum.o \
+	fifo.o log.o statistics.o fec.o udpc_version.o
+	gcc $(LDFLAGS) $^ -lpthread -o $@
+
+udp-receiver.1 udp-sender.1: html2man.pl cmd.html 
+	perl $< $^
+
+fec-test: fec-test.o
+	gcc $(LDFLAGS) $^ -o $@
+
+fec.o: fec.c
+	gcc -c $(CFLAGS) -fno-inline $<
+
+bb:
+	./toBusyBox $(BUSYBOX)
+	make -C $(BUSYBOX)

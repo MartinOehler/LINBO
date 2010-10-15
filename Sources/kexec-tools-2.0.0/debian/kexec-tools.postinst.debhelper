@@ -1,0 +1,10 @@
+# Automatically added by dh_installinit
+if [ -x "/etc/init.d/kexec" ]; then
+	update-rc.d kexec start 85 6 . >/dev/null || exit $?
+fi
+# End automatically added section
+# Automatically added by dh_installinit
+if [ -x "/etc/init.d/kexec-load" ]; then
+	update-rc.d kexec-load stop 18 6 . >/dev/null || exit $?
+fi
+# End automatically added section

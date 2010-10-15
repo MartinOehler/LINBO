@@ -1,0 +1,30 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## debianize.dpatch by  <khalid@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: This patch adds fixes to keep lintian happy
+
+@DPATCH@
+diff -urN --exclude=debian kexec-tools-testing-20080227/Makefile.in kexec-tools-20080227.debian/Makefile.in
+--- kexec-tools-testing-20080227/Makefile.in	2008-02-26 18:07:12.000000000 -0700
++++ kexec-tools-20080227.debian/Makefile.in	2008-02-27 10:09:12.000000000 -0700
+@@ -86,7 +86,7 @@
+ LOCALSTATEDIR=$(BUILD_PREFIX)/var
+ LIBDIR=$(BUILD_PREFIX)/lib
+ INFODIR=$(BUILD_PREFIX)/info
+-MANDIR=$(BUILD_PREFIX)/man
++MANDIR=$(BUILD_PREFIX)/share/man
+ MAN1DIR=$(MANDIR)/man1
+ MAN2DIR=$(MANDIR)/man2
+ MAN3DIR=$(MANDIR)/man3
+@@ -101,8 +101,8 @@
+ PKGLIBDIR=$(LIBDIR)/$(PACKAGE_NAME)
+ PKGINCLUDEIR=$(INCLUDEDIR)/$(PACKAGE_NAME)
+ 
+-MAN_PAGES:= kexec/kexec.8
+-MAN_PAGES+= kdump/kdump.8
++MAN_PAGES:= $(MANDIR)/man8/kexec.8
++MAN_PAGES+= $(MANDIR)/man8/kdump.8
+ BINARIES_i386:=  $(SBINDIR)/kexec $(PKGLIBDIR)/kexec_test
+ BINARIES_x86_64:=$(SBINDIR)/kexec $(PKGLIBDIR)/kexec_test
+ BINARIES:=$(SBINDIR)/kexec $(SBINDIR)/kdump $(BINARIES_$(ARCH))

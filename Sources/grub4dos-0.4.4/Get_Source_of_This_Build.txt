@@ -1,0 +1,17 @@
+Get the source code of this build by using anonymous svn in this way:
+
+svn co -r 60 svn://svn.gna.org/svn/grub4dos/trunk grub4dos
+
+or in this way:
+
+svn co -r 60 http://svn.gna.org/svn/grub4dos/trunk grub4dos
+
+and then apply the patch against revision 60 you just downloaded:
+
+cd grub4dos
+
+patch -p0 < ../grub4dos_r60.diff
+
+and now you may do a "make" to compile.
+
+			

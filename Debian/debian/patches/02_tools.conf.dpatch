@@ -1,0 +1,33 @@
+#!/bin/sh /usr/share/dpatch/dpatch-run
+
+@DPATCH@
+
+--- LINBO/Kernel/initramfs.d/tools.conf	2008-07-19 14:46:29.000000000 +0200
++++ LINBO/Kernel/initramfs.d/tools.conf.new	2008-07-19 14:52:21.000000000 +0200
+@@ -64,11 +64,13 @@
+ 
+ # Grub-Installer (new)
+ dir /usr/sbin 755 0 0
++file /usr/sbin/bootlace.com initramfs/Grub/bootlace.com 755 0 0
+ file /usr/sbin/grub-install initramfs/Grub/grub-install 755 0 0
+ file /usr/sbin/grub-set-default initramfs/Grub/grub-set-default 755 0 0
+ file /usr/sbin/grub initramfs/Grub/grub 755 0 0
+ dir /usr/lib/grub 755 0 0
+ dir /usr/lib/grub/i386-pc 755 0 0
++file /usr/lib/grub/grldr initramfs/Grub/grldr 644 0 0
+ file /usr/lib/grub/i386-pc/e2fs_stage1_5 initramfs/Grub/usr/lib/grub/i386-pc/e2fs_stage1_5 755 0 0
+ file /usr/lib/grub/i386-pc/fat_stage1_5 initramfs/Grub/usr/lib/grub/i386-pc/fat_stage1_5 755 0 0
+ file /usr/lib/grub/i386-pc/jfs_stage1_5 initramfs/Grub/usr/lib/grub/i386-pc/jfs_stage1_5 755 0 0
+@@ -129,7 +131,8 @@
+ file /lib/libntfs.so.10.0.0 initramfs/Ntfsprogs/lib/libntfs.so.10.0.0 755 0 0
+ slink /bin/mkfs.ntfs mkntfs 777 0 0
+ slink /lib/libntfs.so.10 libntfs.so.10.0.0 777 0 0
+-file /bin/parted initramfs/Parted/sbin/parted 755 0 0
+-file /lib/libparted-1.7.so.1.0.0 initramfs/Parted/lib/libparted-1.7.so.1.0.0 755 0 0
+-file /lib/libreadline.so.5 initramfs/Parted/lib/libreadline.so.5 755 0 0
+-slink /lib/libparted-1.7.so.1 libparted-1.7.so.1.0.0 777 0 0
++file /bin/ssmtp initramfs/Ssmtp/ssmtp 755 0 0
++#file /bin/parted initramfs/Parted/sbin/parted 755 0 0
++#file /lib/libparted-1.7.so.1.0.0 initramfs/Parted/lib/libparted-1.7.so.1.0.0 755 0 0
++#file /lib/libreadline.so.5 initramfs/Parted/lib/libreadline.so.5 755 0 0
++#slink /lib/libparted-1.7.so.1 libparted-1.7.so.1.0.0 777 0 0

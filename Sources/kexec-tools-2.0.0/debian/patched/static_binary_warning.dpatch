@@ -1,0 +1,3 @@
+patching file kexec_test/Makefile
+patching file Makefile.in
+Hunk #1 succeeded at 104 (offset 1 line).

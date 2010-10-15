@@ -1,0 +1,75 @@
+udpcast (20040531-1) unstable; urgency=low
+
+  * new upstream
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Wed, 02 Jun 2004 10:30:42 +0200
+
+udpcast (20030831-1) unstable; urgency=low
+
+  * new upstream                                            closes: #221526
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Sat, 22 Nov 2003 00:17:00 +0100
+
+udpcast (20030706-1) unstable; urgency=low
+
+  * new alpha upstream:                                     closes: #203815
+    * new features: --retriesUntilDrop, --nokbd, --exitWait
+  * Debian:
+    * closed in unreleased version (20030601-1):
+      closes: #187622, closes: #187619, closes: #187626
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Thu, 05 Dec 2002 10:34:37 +0100
+
+udpcast (20030601-1) unstable; urgency=low
+
+  * new alpha upstream
+    * unattended mode
+    * max clients = 1024
+    * (both patches by Gary Skouson and Brian Finley)       closes: #187622
+    * can be compiled into busybox (not used in the Debian package)
+    * robuster against bad packets
+    * bugfixes                                              closes: #187619
+    * more logging                                          closes: #187626
+  * Debian:
+    * now assembler code should really be active on i386 platforms
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Thu, 05 Dec 2002 10:34:37 +0100
+
+udpcast (20011231-6) unstable; urgency=low
+
+  * changed path of udp-[sender|receiver] to /usr/bin       closes: #172676
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Thu, 05 Dec 2002 10:34:37 +0100
+
+udpcast (20011231-5) unstable; urgency=low
+
+  * fixed typo in description
+  * enablying assembler code on i386 only                   closes: #172039
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Thu, 05 Dec 2002 10:34:37 +0100
+
+udpcast (20011231-4) unstable; urgency=low
+
+  * tar wasn't included in changes -> retry upload
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Thu, 05 Dec 2002 10:34:37 +0100
+
+udpcast (20011231-3) unstable; urgency=low
+
+  * removed usr/bin from dirs
+  * signed with my debian key instead of some other -> retry upload
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Thu, 05 Dec 2002 09:45:42 +0100
+
+udpcast (20011231-2) unstable; urgency=low
+
+  * removed cruft from first upload :-/
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Wed, 04 Dec 2002 18:40:05 +0100
+
+udpcast (20011231-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Tomas Pospisek <tpo_deb@sourcepole.ch>  Wed,  4 Dec 2002 16:00:21 +0100
+

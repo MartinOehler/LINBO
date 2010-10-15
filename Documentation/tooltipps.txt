@@ -1,0 +1,66 @@
+Tooltipps für die Linbo GUI
+---------------------------
+
+
+Startreiter
+-----------
+
+Sync+Start:	Startet <Systemname Version> synchronisiert
+Start:		Startet <Systemname Version> unsynchronisiert
+Neu+Start:	Installiert <Systemname Version> neu und startet es
+Info:		Informationen zu <Systemname Version>
+
+
+Systemreiter
+------------
+
+Sync+Start:	Startet <Systemname Version> synchronisiert
+Neu+Start:	Installiert <Systemname Version> neu und startet es
+Info:		Informationen zu <Systemname Version>
+
+
+Imagingreiter
+-------------
+
+Console:	Öffnet das Konsolenfenster
+Cache
+aktualisieren:	Aktualisiert den lokalen Imagecache
+Partitionieren:	Partitioniert die Festplatte neu
+Registrieren:	Öffnet den Registrierungsdialog zur Aufnahme neuer Rechner
+Image
+erstellen:	Ein neues Image für <Systemname Version> erstellen
+Image
+hochladen:	Ein Image für <Systemname Version> auf den Server hochladen
+LOGOUT:		Beendet den Root-Modus
+
+
+Imagingreiter, Dialog Erstellen/Image-Auswahl
+---------------------------------------------
+
+Erstellen:	Erstellt Image <Image> im lokale Cache
+Erstellen+
+Upload:		Erstellt Image <Image> im lokale Cache und lädt es anschließend
+		auf den Server hoch
+Abbruch:	Abbrechen ohne Imageerstellung
+
+
+Imagingreiter, Dialog Update-Cache
+----------------------------------
+
+OK:		Aktualisiert den lokalen Cache mit der gewählten Methode
+Abbruch:	Abbrechen ohne Cache-Aktualisierung
+
+
+Imagingreiter, Dialog Rechner registrieren
+------------------------------------------
+
+Registrieren:	Lädt die Rechnerinformationen auf den Server hoch
+Abbruch:	Abbrechen ohne Rechnerregistrierung
+
+
+Imagingreiter, Dialog Hochladen/Image-Auswahl
+---------------------------------------------
+
+OK:		Lädt das ausgewählte Image auf den Server hoch
+Abbruch:	Abbrechen ohne Hochladen
+

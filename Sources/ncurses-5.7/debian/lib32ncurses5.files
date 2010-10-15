@@ -1,0 +1,5 @@
+emul/ia32-linux/lib/libncurses.so.*
+emul/ia32-linux/lib/libtic.so.*
+emul/ia32-linux/usr/lib/libpanel.so.*
+emul/ia32-linux/usr/lib/libform.so.*
+emul/ia32-linux/usr/lib/libmenu.so.*

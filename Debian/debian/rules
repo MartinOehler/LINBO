@@ -1,0 +1,103 @@
+#!/usr/bin/make -f
+
+export DH_COMPAT=4
+
+# To use dpatch uncomment the following line and set Build-Depends to dpatch
+DPATCH=yes
+
+ifdef DPATCH
+include /usr/share/dpatch/dpatch.make
+else
+patch:
+patch-stamp:
+unpatch:
+endif
+
+configure: configure-stamp
+configure-stamp: patch-stamp
+	dh_testdir
+	touch configure-stamp
+
+build: build-stamp
+build-stamp: configure-stamp
+	dh_testdir
+	#mkdir locale
+	#$(MAKE) linbo linbofs $(MAKE_OPTIONS)
+	$(MAKE) linbofs $(MAKE_OPTIONS)
+	touch build-stamp
+
+clean: clean-patched unpatch
+clean-patched:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+	#-$(MAKE) -o .dependencies clean $(MAKE_OPTIONS)
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	dh_install
+	install -m 644 Binaries/german.kbd debian/linuxmuster-linbo/var/linbo/
+	install -m 755 Binaries/linbo-multicast-server.sh debian/linuxmuster-linbo/usr/sbin/linbo-multicast-server
+	install -m 644 Graphics/linbo-pxe-bootscreen.16 debian/linuxmuster-linbo/var/linbo/logo.16
+	install -m 644 Images/linbo* debian/linuxmuster-linbo/var/linbo/
+	install -m 644 Images/pxelinux.cfg/default debian/linuxmuster-linbo/etc/linuxmuster/linbo/pxelinux.cfg.default
+	install -m 644 Pxegrub/pxegrub debian/linuxmuster-linbo/var/linbo/
+	install -m 644 Pxegrub/pxegrub-v2 debian/linuxmuster-linbo/var/linbo/
+	install -m 644 Pxegrub/pxegrub-v3 debian/linuxmuster-linbo/var/linbo/
+	install -m 644 cd/boot/isolinux/german.kbd debian/linuxmuster-linbo/usr/share/linuxmuster-linbo/cd/isolinux/
+	install -m 644 cd/boot/isolinux/isolinux.cfg debian/linuxmuster-linbo/usr/share/linuxmuster-linbo/cd/isolinux/
+	sed -e 's/ nonetwork//g' -i debian/linuxmuster-linbo/usr/share/linuxmuster-linbo/cd/isolinux/isolinux.cfg
+	install -m 644 Graphics/linbo-cd-bootscreen.16 debian/linuxmuster-linbo/usr/share/linuxmuster-linbo/cd/isolinux/logo.16
+	install -m 644 Documentation/LINBO.pdf debian/linuxmuster-linbo/usr/share/doc/linuxmuster-linbo/
+	install -m 644 debian/examples/* debian/linuxmuster-linbo/usr/share/doc/linuxmuster-linbo/examples/
+	install -m 644 debian/default debian/linuxmuster-linbo/etc/default/linuxmuster-linbo
+	install -m 644 debian/start.conf debian/linuxmuster-linbo/etc/linuxmuster/linbo/start.conf.default
+	install -m 644 debian/pxegrub.lst debian/linuxmuster-linbo/etc/linuxmuster/linbo/pxegrub.lst.default
+	install -m 755 debian/rsync-p*.sh debian/linuxmuster-linbo/usr/share/linuxmuster-linbo/
+	install -m 755 debian/make-linbo-iso.sh debian/linuxmuster-linbo/usr/share/linuxmuster-linbo/
+	install -m 755 debian/mail2log.sh debian/linuxmuster-linbo/usr/share/linuxmuster-linbo/
+	install -m 755 debian/linbo-multicast debian/linuxmuster-linbo/etc/init.d/
+	debian/patch_version.sh
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdebconf	
+	dh_installdocs
+	dh_installexamples
+#	dh_installmenu
+	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+	dh_installdirs
+	dh_installcron
+#	dh_installman
+#	dh_installinfo
+#	dh_undocumented
+	dh_install
+	dh_installchangelogs 
+	dh_link
+	dh_strip
+#	dh_compress
+	dh_fixperms
+#	dh_makeshlibs
+	dh_installdeb
+#	dh_perl
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure \
+        clean-patched patch unpatch
