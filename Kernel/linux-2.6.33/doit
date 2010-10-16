@@ -1,1 +1,0 @@
-CONCURRENCY_LEVEL=3 nice -10 fakeroot make-kpkg binary-arch modules
