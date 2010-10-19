@@ -1,0 +1,16 @@
+prefix=/crypt/knoppix.build/LINBO/GUI2/qt-embedded-linux-opensource-src-4.5.2
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include/QtCLucene
+qt_config=lex yacc uic resources qt release incremental link_prl no_mocdepend release qt_no_framework release static embedded precompile_header mmx 3dnow sse sse2 dylib create_prl link_prl depend_includepath QTDIR_build qt_install_headers qt depend_includepath qmake_cache target_qt hide_symbols create_libtool create_pc explicitlib qt warn_off hide_symbols exceptions moc thread staticlib static
+moc_location=${prefix}/bin/moc
+uic_location=${prefix}/bin/uic
+
+Name: Qtclucene
+Description: Qtclucene Library
+Version: 4.5.2
+Libs: -L${libdir} -lQtCLucene 
+Libs.private: -L/crypt/knoppix.build/LINBO/GUI2/qt-embedded-linux-opensource-src-4.5.2/lib  -lQtNetwork -L/crypt/knoppix.build/LINBO/GUI2/qt-embedded-linux-opensource-src-4.5.2/lib -lQtCore -lm -lrt -lpthread -ldl  
+Cflags: -I/crypt/knoppix.build/LINBO/GUI2/qt-embedded-linux-opensource-src-4.5.2/include -I${includedir}
+Requires: QtCore
+
