@@ -67,6 +67,7 @@ cloop: $(KERNEL)
 kernel: $(KERNEL)
 	@echo "[1mBuilding LINBO kernel...[0m" ; \
 	rm -rf Binaries/modules/* || true
+	test -r $(KERNEL)/.config || cp Kernel/kernel.conf $(KERNEL)/.config
 	cd $(KERNEL) ; \
 	ln -snf ../initramfs_kernel.conf . ; \
 	ln -snf ../../Binaries initramfs ; \
