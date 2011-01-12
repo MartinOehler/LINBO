@@ -1071,7 +1071,7 @@ syncl(){
    if [ -r "$patchfile" ]; then
     echo "Patche System mit $patchfile"
     rm -f "$TMP"
-    sed 's|{\$HostName\$}|'"$HOSTNAME"'|g;y/\r/\n/' "$patchfile" > "$TMP"
+    sed 's|{\$HostName\$}|'"$HOSTNAME"'|g;y//\n/' "$patchfile" > "$TMP"
     # tschmitt: different registry patching for Win98, WinXP, Win7
     if [ -e /mnt/[Nn][Tt][Ll][Dd][Rr] -o -e /mnt/[Bb][Oo][Oo][Tt][Mm][Gg][Rr] ]; then
      # tschmitt: logging
@@ -1088,7 +1088,7 @@ syncl(){
       if [ -n "$newdevdll" -a ! -s "$newdevdll.linbo-orig" ]; then
        echo "Patche $newdevdll ..."
        [ -e "$newdevdll.linbo-orig" ] || cp "$newdevdll" "$newdevdll.linbo-orig"
-       grep ^: /etc/newdev-patch.bvi | bvi "$newdevdll" 2>&1 >>/tmp/patch.log
+       grep ^: /etc/newdev-patch.bvi | bvi "$newdevdll" >>/tmp/patch.log 2>&1
       fi
      fi
      # write partition bootsector

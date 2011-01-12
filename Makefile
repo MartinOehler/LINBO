@@ -89,6 +89,13 @@ Binaries/Patch_Registry/patch_registry.sh: Patch_Registry/patch_registry.sh
 Binaries/linbo_gui/linbo_gui: GUI2/linbo_gui
 	ln -nf $< $@
 
+# Don't check this dependency, rather compile manually
+#GUI2/linbo_gui: GUI2/qt-embedded-linux-opensource-src-4.5.2/lib/libQtGui.a
+#	cd GUI2 && ./build_gui
+
+GUI2/qt-embedded-linux-opensource-src-4.5.2/lib/libQtGui.a:
+	cd GUI2 && ./build_qt
+
 qemu:
 	cd Qemu/qemu && CC=gcc-3.4 fakeroot dpkg-buildpackage -us -uc 
 #	cd Qemu/qemu && fakeroot dpkg-buildpackage -us -uc 
