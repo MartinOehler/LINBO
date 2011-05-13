@@ -1,0 +1,11 @@
+Package: cloop-utils
+Source: cloop
+Version: 2.639-1
+Architecture: i386
+Maintainer: Klaus Knopper <knoppix@knopper.net>
+Installed-Size: 20
+Section: misc
+Priority: optional
+Description: Tools for handling cloop compressed volumes
+ Utilities for creating and unpacking compressed loopback files
+ for cloop.

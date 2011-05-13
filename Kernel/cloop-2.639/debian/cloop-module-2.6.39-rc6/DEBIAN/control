@@ -1,0 +1,13 @@
+Package: cloop-module-2.6.39-rc6
+Source: cloop
+Version: 2.639-1
+Architecture: i386
+Maintainer: Klaus Knopper <knoppix@knopper.net>
+Installed-Size: 12
+Recommends: cloop-utils
+Section: misc
+Priority: optional
+Description: The compressed loopback block device kernel module
+ Cloop is the driver module for transparent access to a
+ blockwise compressed partition image, containing an ISO9660 (or other)
+ filesystem.

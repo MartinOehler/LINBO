@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+if [ "`uname -r`" = "2.6.39-rc6" ]; then
+	/sbin/depmod -a
+fi
+
+
+
+exit 0

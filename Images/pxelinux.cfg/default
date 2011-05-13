@@ -4,11 +4,11 @@ DEFAULT LINBO
 # Die Zeile geht mit grub.exe:
 # APPEND initrd=linbofs.gz debug noapic nolapic pnpbios=off pci=nommconf clocksource=pit iommu=usedac nomce vga=785 quiet test="this is a test"
 # check: acpi=off noapic
-APPEND initrd=linbofs.gz acpi=off noapic nolapic irqpoll pci=routeirq pnpbios=off nomce vga=785 quiet
+APPEND initrd=linbofs.gz acpi=off noapic nolapic irqpoll pci=routeirq pnpbios=off nomce vga=785
 TIMEOUT 30
 KBDMAP /german.kbd
 PROMPT 1
 DISPLAY /boot.msg
 LABEL LINBO
 KERNEL linbo
-APPEND initrd=linbofs.gz acpi=off noapic nolapic irqpoll pci=routeirq pnpbios=off nomce vga=785 quiet
+APPEND initrd=linbofs.gz acpi=off noapic nolapic irqpoll pci=routeirq pnpbios=off nomce vga=785
